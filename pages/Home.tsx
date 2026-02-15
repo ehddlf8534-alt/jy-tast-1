@@ -11,14 +11,14 @@ interface HomeProps {
   siteConfig: SiteConfig;
 }
 
-const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) => {
+const Home: React.FC<HomeProps> = ({ heroes = [], about, processSteps = [], siteConfig }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const touchStart = useRef<number | null>(null);
 
   // Combine all sections into a single array for mapping
   const sections = [
-    ...heroes.map((h, i) => ({ type: 'hero', data: h, index: i })),
+    ...(heroes || []).map((h, i) => ({ type: 'hero', data: h, index: i })),
     { type: 'about', data: about },
     { type: 'process', data: processSteps },
     { type: 'cta', data: siteConfig }
@@ -59,7 +59,6 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
     };
   }, [handleScroll]);
 
-  // Touch handlers for mobile
   const onTouchStart = (e: React.TouchEvent) => {
     touchStart.current = e.touches[0].clientY;
   };
@@ -75,12 +74,15 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
     touchStart.current = null;
   };
 
-  const getPosStyle = (pos: TextPosition) => ({
-    textAlign: pos.align,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    alignItems: pos.align === 'center' ? 'center' : pos.align === 'right' ? 'flex-end' : 'flex-start',
-  });
+  const getPosStyle = (pos?: TextPosition) => {
+    if (!pos) return {};
+    return {
+      textAlign: pos.align,
+      display: 'flex',
+      flexDirection: 'column' as const,
+      alignItems: pos.align === 'center' ? 'center' : pos.align === 'right' ? 'flex-end' : 'flex-start',
+    };
+  };
 
   const sortedNavItems = [...(siteConfig.navItems || [])]
     .filter(item => item.visible)
@@ -113,7 +115,10 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
                     <div className="absolute inset-0 bg-black/20"></div>
                   </div>
                   <div className={`relative z-10 w-full max-w-[1600px] mx-auto px-6 lg:px-12 ${(section as any).index % 2 === 1 ? 'text-right flex flex-col items-end' : ''}`}>
-                    <div className={`max-w-4xl transition-all duration-1000 delay-300 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+                    <div 
+                      className={`max-w-4xl transition-all duration-1000 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
+                      style={{ transitionDelay: '300ms' }}
+                    >
                       <span className="inline-block text-[11px] tracking-[0.5em] mb-8 uppercase font-bold text-white/70">{(section.data as HeroConfig).subtitle}</span>
                       <h1 className="text-5xl md:text-9xl font-bold mb-10 serif-display leading-[0.9] tracking-tight uppercase text-white">
                         {(section.data as HeroConfig).title}
@@ -126,7 +131,10 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
 
               {section.type === 'about' && (
                 <div className="w-full max-w-[1600px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                  <div className={`lg:col-span-6 transition-all duration-1000 delay-300 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`} style={getPosStyle((section.data as AboutConfig).titlePos)}>
+                  <div 
+                    className={`lg:col-span-6 transition-all duration-1000 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`} 
+                    style={{ ...getPosStyle((section.data as AboutConfig).titlePos), transitionDelay: '300ms' }}
+                  >
                     <span className="text-[11px] tracking-[0.4em] uppercase text-stone-300 font-bold mb-6 block">{(section.data as AboutConfig).subtitle}</span>
                     <h2 className="text-4xl md:text-7xl font-bold mb-12 serif-display leading-tight text-stone-900">{(section.data as AboutConfig).title}</h2>
                     <p className="text-stone-400 leading-relaxed text-[17px] font-light max-w-lg mb-12">{(section.data as AboutConfig).description}</p>
@@ -134,13 +142,15 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
                   </div>
                   <div className="lg:col-span-6 flex gap-8">
                     <img 
-                      src={(section.data as AboutConfig).imageUrls[0]} 
-                      className={`w-1/2 aspect-[4/6] object-cover transition-all duration-[1500ms] delay-500 shadow-2xl ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`} 
+                      src={(section.data as AboutConfig).imageUrls?.[0]} 
+                      className={`w-1/2 aspect-[4/6] object-cover transition-all duration-[1500ms] shadow-2xl ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`} 
+                      style={{ transitionDelay: '500ms' }}
                       alt="About 1" 
                     />
                     <img 
-                      src={(section.data as AboutConfig).imageUrls[1]} 
-                      className={`w-1/2 aspect-[4/6] object-cover mt-20 transition-all duration-[1500ms] delay-700 shadow-2xl ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`} 
+                      src={(section.data as AboutConfig).imageUrls?.[1]} 
+                      className={`w-1/2 aspect-[4/6] object-cover mt-20 transition-all duration-[1500ms] shadow-2xl ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`} 
+                      style={{ transitionDelay: '700ms' }}
                       alt="About 2" 
                     />
                   </div>
@@ -149,7 +159,10 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
 
               {section.type === 'process' && (
                 <div className="w-full max-w-[1600px] mx-auto px-6 lg:px-12">
-                   <div className={`mb-24 transition-all duration-1000 delay-300 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={getPosStyle(siteConfig.uiText.processPos)}>
+                   <div 
+                    className={`mb-24 transition-all duration-1000 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} 
+                    style={{ ...getPosStyle(siteConfig.uiText.processPos), transitionDelay: '300ms' }}
+                   >
                     <span className="text-[11px] tracking-[0.3em] uppercase text-stone-300 font-bold mb-4 block">{siteConfig.uiText.processSubtitle}</span>
                     <h2 className="text-4xl md:text-6xl font-bold serif-display text-stone-900">{siteConfig.uiText.processTitle}</h2>
                   </div>
@@ -157,7 +170,8 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
                     {(section.data as ProcessStep[]).map((p, pIdx) => (
                       <div 
                         key={pIdx} 
-                        className={`p-12 hover:bg-stone-50 transition-all duration-700 delay-[${400 + pIdx * 100}ms] ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                        className={`p-12 hover:bg-stone-50 transition-all duration-700 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                        style={{ transitionDelay: `${400 + pIdx * 100}ms` }}
                       >
                         <span className="text-[11px] tracking-widest text-stone-200 block mb-12 font-bold">{p.step}</span>
                         <h4 className="text-lg font-bold mb-6 serif-display uppercase tracking-widest text-stone-800">{p.title}</h4>
@@ -172,7 +186,10 @@ const Home: React.FC<HomeProps> = ({ heroes, about, processSteps, siteConfig }) 
                 <div className="w-full h-full flex flex-col bg-stone-50">
                   <div className="flex-grow flex items-center justify-center">
                     <div className="max-w-[1600px] mx-auto px-6 lg:px-12 w-full">
-                      <div className={`transition-all duration-1000 delay-300 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={getPosStyle(siteConfig.uiText.ctaPos)}>
+                      <div 
+                        className={`transition-all duration-1000 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} 
+                        style={{ ...getPosStyle(siteConfig.uiText.ctaPos), transitionDelay: '300ms' }}
+                      >
                         <span className="text-[11px] tracking-[0.4em] mb-8 uppercase text-stone-300 font-bold">{siteConfig.uiText.ctaSubtitle}</span>
                         <h2 className="text-4xl md:text-8xl font-bold mb-16 serif-display leading-[1.1] tracking-tight whitespace-pre-wrap">{siteConfig.uiText.ctaTitle}</h2>
                         <div className="flex flex-col md:flex-row items-center gap-12">

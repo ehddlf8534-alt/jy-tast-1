@@ -8,8 +8,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Pretendard:wght@100;300;400;600&display=swap" rel="stylesheet">
     <style>
-      html {
-        scroll-behavior: smooth;
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
       }
       body {
         font-family: 'Pretendard', sans-serif;
@@ -62,5 +66,7 @@
   </head>
   <body class="bg-[#ffffff] text-[#1a1a1a] overflow-x-hidden selection:bg-stone-900 selection:text-white">
     <div id="root"></div>
+    <!-- Explicitly load the entry point -->
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
