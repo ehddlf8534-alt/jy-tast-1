@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JYDESIGN | Premium Architectural Interior</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Pretendard:wght@100;300;400;600&display=swap" rel="stylesheet">
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: 'Pretendard', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .serif-display {
+        font-family: 'Cinzel', serif;
+        letter-spacing: 0.1em;
+      }
+      .serif-body {
+        font-family: 'Playfair Display', serif;
+      }
+      .line-draw {
+        position: relative;
+      }
+      .line-draw::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: currentColor;
+        transition: width 0.3s ease;
+      }
+      .line-draw:hover::after {
+        width: 100%;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f5f5f4;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1c1917;
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://esm.sh/react@^19.2.4/",
+        "react": "https://esm.sh/react@^19.2.4",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+        "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0"
+      }
+    }
+    </script>
+  </head>
+  <body class="bg-[#ffffff] text-[#1a1a1a] overflow-x-hidden selection:bg-stone-900 selection:text-white">
+    <div id="root"></div>
+  </body>
+</html>
